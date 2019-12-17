@@ -12,6 +12,7 @@ class MusicPlayer extends React.Component {
       startedAt: null,
       pausedAt: null,
       playing: false,
+      status: "stopped",
       currentTrack: ""
     };
   }
@@ -31,7 +32,8 @@ class MusicPlayer extends React.Component {
       source.start(0, startTime);
       this.setState({
         startedAt: Date.now(),
-        playing: true
+        playing: true,
+        status: "playing"
       });
     } else {
       console.log("A track is currently loading");
@@ -50,11 +52,16 @@ class MusicPlayer extends React.Component {
 
   stopTrack = () => {
     const [AppContainer] = this.props.containers;
-    AppContainer.state.source.stop();
-    AppContainer.clearTrackInformation();
-    this.setState({
-      playing: false
-    });
+    if (!AppContainer.isTrackLoading) {
+      AppContainer.state.source.stop();
+      AppContainer.clearTrackInformation();
+      this.setState({
+        playing: false,
+        status: "stopped"
+      });
+    } else {
+      console.warn("Track is currently loading");
+    }
   };
 
   pauseTrack = () => {
@@ -63,7 +70,8 @@ class MusicPlayer extends React.Component {
     AppContainer.clearTrackInformation();
     this.setState({
       pausedAt: Date.now() - this.state.startedAt,
-      playing: false
+      playing: false,
+      status: "paused"
     });
   };
 
@@ -101,7 +109,20 @@ class MusicPlayer extends React.Component {
       </button>
     );
   }
+  renderStop() {
+    switch (this.state.status) {
+      case "playing":
+      case "paused":
+        return (
+          <button className="button--icon" onClick={this.stopTrack}>
+            <Icon path={mdiStop} title="Stop" size={1} color="white" />
+          </button>
+        );
 
+      default:
+        return null;
+    }
+  }
   render() {
     const [AppContainer] = this.props.containers;
     const { selectedTrack } = AppContainer.state;
@@ -119,20 +140,8 @@ class MusicPlayer extends React.Component {
         </div>
         {selectedTrack && (
           <section id="track-controls">
-            {/* {this.state.playing ? (
-              <button className="button--icon" onClick={this.pauseTrack}>
-                <Icon path={mdiPause} title="Pause" size={1} color="white" />
-              </button>
-            ) : (
-              <button className="button--icon" onClick={this.resumeTrack}>
-                {" "}
-                <Icon path={mdiPlay} title="Resume" size={1} color="white" />
-              </button>
-            )} */}
             {this.renderPlayPause()}
-            <button className="button--icon" onClick={this.stopTrack}>
-              <Icon path={mdiStop} title="Resume" size={1} color="white" />
-            </button>
+            {this.renderStop()}
           </section>
         )}
       </section>
