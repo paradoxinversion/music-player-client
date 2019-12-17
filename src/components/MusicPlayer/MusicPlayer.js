@@ -3,7 +3,14 @@ import axios from "axios";
 import connect from "unstated-connect";
 import AppContainer from "../../containers/AppContainer";
 import Icon from "@mdi/react";
-import { mdiPlay, mdiPause, mdiStop, mdiLoading } from "@mdi/js";
+import {
+  mdiPlay,
+  mdiPause,
+  mdiStop,
+  mdiLoading,
+  mdiSkipNext,
+  mdiSkipForward
+} from "@mdi/js";
 
 class MusicPlayer extends React.Component {
   constructor(props) {
@@ -25,7 +32,7 @@ class MusicPlayer extends React.Component {
 
   playTrack = async startTime => {
     const [AppContainer] = this.props.containers;
-    if (!AppContainer.state.isTrackLoading) {
+    if (!AppContainer.isTrackLoading()) {
       AppContainer.clearTrackInformation();
       const response = await AppContainer.getAudioTrack();
       const { source } = await AppContainer.createAudioSource(response.data);
@@ -46,14 +53,14 @@ class MusicPlayer extends React.Component {
    */
   playNewTrack = () => {
     const [AppContainer] = this.props.containers;
-    if (AppContainer.state.source) this.stopTrack();
+    if (AppContainer.getAudioSource()) this.stopTrack();
     this.playTrack(0);
   };
 
   stopTrack = () => {
     const [AppContainer] = this.props.containers;
-    if (!AppContainer.isTrackLoading) {
-      AppContainer.state.source.stop();
+    if (!AppContainer.isTrackLoading()) {
+      AppContainer.getAudioSource().stop();
       AppContainer.clearTrackInformation();
       this.setState({
         playing: false,
@@ -66,7 +73,7 @@ class MusicPlayer extends React.Component {
 
   pauseTrack = () => {
     const [AppContainer] = this.props.containers;
-    AppContainer.state.source.stop();
+    AppContainer.getAudioSource().stop();
     AppContainer.clearTrackInformation();
     this.setState({
       pausedAt: Date.now() - this.state.startedAt,
@@ -79,6 +86,7 @@ class MusicPlayer extends React.Component {
     this.playTrack(this.state.pausedAt / 1000);
   };
 
+  skipToNextTrack = () => {};
   /* Render Functions/Helpers */
 
   renderPlayPause() {
@@ -95,7 +103,7 @@ class MusicPlayer extends React.Component {
     return (
       <button className="button--icon" onClick={this.resumeTrack}>
         {" "}
-        {!AppContainer.state.isTrackLoading ? (
+        {!AppContainer.isTrackLoading() ? (
           <Icon path={mdiPlay} title="Play/Resume" size={1} color="white" />
         ) : (
           <Icon
@@ -123,16 +131,30 @@ class MusicPlayer extends React.Component {
         return null;
     }
   }
+  renderSkipForward() {
+    switch (this.state.status) {
+      case "playing":
+      case "paused":
+        return (
+          <button className="button--icon" onClick={this.stopTrack}>
+            <Icon path={mdiSkipForward} title="Next" size={1} color="white" />
+          </button>
+        );
+
+      default:
+        return null;
+    }
+  }
   render() {
     const [AppContainer] = this.props.containers;
-    const { selectedTrack } = AppContainer.state;
+    const selectedTrack = AppContainer.getSelectedTrack();
     return (
       <section id="music-player">
         <div id="now-playing">
           {selectedTrack ? (
             <React.Fragment>
               <span>Now Playing: </span>
-              <span>{AppContainer.state.selectedTrack}</span>
+              <span>{selectedTrack}</span>
             </React.Fragment>
           ) : (
             <span>Select a Track</span>
@@ -142,6 +164,7 @@ class MusicPlayer extends React.Component {
           <section id="track-controls">
             {this.renderPlayPause()}
             {this.renderStop()}
+            {this.renderSkipForward()}
           </section>
         )}
       </section>

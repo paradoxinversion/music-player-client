@@ -10,6 +10,13 @@ class AppContainer extends Container {
     isTrackLoading: false
   };
 
+  getSelectedTrack = () => this.state.selectedTrack;
+
+  getTracks = () => this.state.tracks;
+
+  isTrackLoading = () => this.state.isTrackLoading;
+
+  getAudioSource = () => this.state.source;
   selectTrack(track) {
     this.setState({
       selectedTrack: track.slice(0, track.length - 4)

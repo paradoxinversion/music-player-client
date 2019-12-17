@@ -12,7 +12,7 @@ const Track = props => {
       onMouseEnter={() => setIsHighlighted(true)}
       onMouseLeave={() => setIsHighlighted(false)}
       onClick={() => {
-        if (!AppContainer.state.isTrackLoading)
+        if (!AppContainer.isTrackLoading())
           AppContainer.selectTrack(props.track.name);
       }}
       className="track">
