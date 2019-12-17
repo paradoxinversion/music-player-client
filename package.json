@@ -1,0 +1,27 @@
+{
+  "name": "music-player-client",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/paradoxinversion/music-player-client.git",
+  "author": "Jedai Saboteur <dev@paradoxinversion.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/runtime": "^7.7.6",
+    "@mdi/js": "^4.7.95",
+    "@mdi/react": "^1.2.1",
+    "axios": "^0.19.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "unstated": "^2.1.1",
+    "unstated-connect": "^0.0.3"
+  },
+  "scripts": {
+    "start": "parcel ./src/index.html"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-transform-runtime": "^7.7.6",
+    "parcel-bundler": "^1.12.4"
+  }
+}
