@@ -1,8 +1,8 @@
 import React from "react";
 import axios from "axios";
 import connect from "unstated-connect";
-import MusicPlayer from "./MusicPlayer";
-import Track from "./Track";
+import MusicPlayer from "./components/MusicPlayer/MusicPlayer";
+import Track from "./components/Track/Track";
 import AppContainer from "./containers/AppContainer";
 class App extends React.Component {
   constructor(props) {
@@ -28,7 +28,7 @@ class App extends React.Component {
           <MusicPlayer track={AppContainer.state.selectedTrack} />
           <section id="track-container">
             {AppContainer.state.tracks.map(track => (
-              <Track track={track} />
+              <Track key={`track-${track.name}`} track={track} />
             ))}
           </section>
         </div>

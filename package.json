@@ -16,7 +16,8 @@
     "unstated-connect": "^0.0.3"
   },
   "scripts": {
-    "start": "parcel ./src/index.html"
+    "start": "yarn start:dev",
+    "start:dev": "parcel ./src/index.html"
   },
   "devDependencies": {
     "@babel/core": "^7.7.5",
