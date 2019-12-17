@@ -17,6 +17,15 @@ class AppContainer extends Container {
   isTrackLoading = () => this.state.isTrackLoading;
 
   getAudioSource = () => this.state.source;
+
+  hasNextTrack = () => {
+    const trackIndex = this.state.tracks.findIndex(
+      track =>
+        track.name.slice(0, track.name.length - 4) === this.state.selectedTrack
+    );
+    return trackIndex < this.state.tracks.length - 1 ? true : false;
+  };
+
   selectTrack(track) {
     this.setState({
       selectedTrack: track.slice(0, track.length - 4)

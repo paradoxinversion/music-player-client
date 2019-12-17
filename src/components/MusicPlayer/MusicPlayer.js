@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import connect from "unstated-connect";
 import AppContainer from "../../containers/AppContainer";
 import Icon from "@mdi/react";
@@ -87,6 +86,7 @@ class MusicPlayer extends React.Component {
   };
 
   skipToNextTrack = () => {};
+
   /* Render Functions/Helpers */
 
   renderPlayPause() {
@@ -132,18 +132,22 @@ class MusicPlayer extends React.Component {
     }
   }
   renderSkipForward() {
-    switch (this.state.status) {
-      case "playing":
-      case "paused":
-        return (
-          <button className="button--icon" onClick={this.stopTrack}>
-            <Icon path={mdiSkipForward} title="Next" size={1} color="white" />
-          </button>
-        );
+    const [AppContainer] = this.props.containers;
+    if (AppContainer.hasNextTrack()) {
+      switch (this.state.status) {
+        case "playing":
+        case "paused":
+          return (
+            <button className="button--icon" onClick={this.stopTrack}>
+              <Icon path={mdiSkipForward} title="Next" size={1} color="white" />
+            </button>
+          );
 
-      default:
-        return null;
+        default:
+          return null;
+      }
     }
+    return null;
   }
   render() {
     const [AppContainer] = this.props.containers;

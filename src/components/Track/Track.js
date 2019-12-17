@@ -16,10 +16,18 @@ const Track = props => {
           AppContainer.selectTrack(props.track.name);
       }}
       className="track">
-      {props.track.name.slice(0, props.track.name.length - 4)}
+      <span className="track-name">
+        {props.track.name.slice(0, props.track.name.length - 4)}
+      </span>
       {isHighlighted && (
         <React.Fragment>
-          <Icon path={mdiPlay} title="Play" size={1} color="white" />
+          <Icon
+            className="button--icon"
+            path={mdiPlay}
+            title="Play"
+            size={1}
+            color="white"
+          />
         </React.Fragment>
       )}
     </div>
