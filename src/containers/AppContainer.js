@@ -18,30 +18,54 @@ class AppContainer extends Container {
 
   getAudioSource = () => this.state.source;
 
+  hasPreviousTrack = () => {
+    const trackIndex = this.state.tracks.findIndex(
+      track => track.metadata.title === this.state.selectedTrack
+    );
+    return trackIndex > 0 ? true : false;
+  };
+
+  getPreviousTrack = () => {
+    const trackIndex = this.state.tracks.findIndex(
+      track => track.metadata.title === this.state.selectedTrack
+    );
+    return this.state.tracks[trackIndex - 1];
+  };
+
   hasNextTrack = () => {
     const trackIndex = this.state.tracks.findIndex(
-      track =>
-        track.name.slice(0, track.name.length - 4) === this.state.selectedTrack
+      track => track.metadata.title === this.state.selectedTrack
     );
     return trackIndex < this.state.tracks.length - 1 ? true : false;
   };
 
-  selectTrack(track) {
-    this.setState({
-      selectedTrack: track.slice(0, track.length - 4)
+  getNextTrack = () => {
+    const trackIndex = this.state.tracks.findIndex(
+      track => track.metadata.title === this.state.selectedTrack
+    );
+    return this.state.tracks[trackIndex + 1];
+  };
+
+  async selectTrack(track) {
+    await this.setState({
+      selectedTrack: track
     });
   }
 
   async getAudioTracks() {
     const response = await axios.get("http://localhost:3001/api/v1/tracks");
-    const { tracks: trackData } = response.data;
-    const tracks = trackData.map(track => ({ name: track, isHovered: false }));
-    this.setState({ tracks });
+    const { trackMetadata: trackData } = response.data;
+    const tracks = trackData.map(track => ({
+      name: track.title,
+      isHovered: false,
+      metadata: track
+    }));
+    await this.setState({ tracks });
     return tracks;
   }
   async getAudioTrack() {
     // ! The Track isn't done loading until the audio source has been connected
-    this.setState({ isTrackLoading: true });
+    await this.setState({ isTrackLoading: true });
     const response = await axios.get(
       `http://localhost:3001/api/v1/track?trackName=${this.state.selectedTrack}`,
       {
@@ -64,7 +88,7 @@ class AppContainer extends Container {
     const source = audioContext.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(audioContext.destination);
-    this.setState({
+    await this.setState({
       audioBuffer,
       audioContext,
       source
@@ -73,8 +97,8 @@ class AppContainer extends Container {
     return { source, audioBuffer, audioContext };
   }
 
-  clearTrackInformation() {
-    this.setState({
+  async clearTrackInformation() {
+    await this.setState({
       audioBuffer: null,
       audioContext: null,
       source: null

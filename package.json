@@ -10,6 +10,7 @@
     "@mdi/js": "^4.7.95",
     "@mdi/react": "^1.2.1",
     "axios": "^0.19.0",
+    "moment": "^2.24.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "unstated": "^2.1.1",
@@ -17,7 +18,7 @@
   },
   "scripts": {
     "start": "yarn start:dev",
-    "start:dev": "parcel ./src/index.html"
+    "start:dev": "parcel ./src/index.html --no-cache"
   },
   "devDependencies": {
     "@babel/core": "^7.7.5",

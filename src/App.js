@@ -28,7 +28,7 @@ class App extends React.Component {
           <MusicPlayer track={AppContainer.getSelectedTrack()} />
           <section id="track-container">
             {AppContainer.getTracks().map(track => (
-              <Track key={`track-${track.name}`} track={track} />
+              <Track key={`track-${track.metadata.title}`} track={track} />
             ))}
           </section>
         </div>
