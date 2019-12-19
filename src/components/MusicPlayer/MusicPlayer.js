@@ -1,5 +1,6 @@
 import React from "react";
 import connect from "unstated-connect";
+import moment from "moment";
 import AppContainer from "../../containers/AppContainer";
 import Icon from "@mdi/react";
 import {
@@ -35,17 +36,39 @@ class MusicPlayer extends React.Component {
     if (!AppContainer.isTrackLoading()) {
       await AppContainer.clearTrackInformation();
       const response = await AppContainer.getAudioTrack();
-      const { source } = await AppContainer.createAudioSource(response.data);
+      const { source, audioBuffer } = await AppContainer.createAudioSource(
+        response.data
+      );
       source.start(0, startTime);
+      this.startTrackTimer();
       this.setState({
-        startedAt: Date.now(),
+        startedAt: startTime ? Date.now() - startTime * 1000 : Date.now(),
         playing: true,
-        status: "playing"
+        status: "playing",
+        duration: audioBuffer.duration
       });
     } else {
       console.log("A track is currently loading");
     }
   };
+
+  startTrackTimer() {
+    const trackTimerId = setInterval(() => {
+      const currentTrackTime = (Date.now() - this.state.startedAt) / 1000;
+      const percentageTrackComplete = parseInt(
+        (currentTrackTime * 100) / this.state.duration,
+        10
+      );
+      this.setState({ currentTrackTime, percentageTrackComplete });
+    }, 1000);
+    this.setState({
+      trackTimerId
+    });
+  }
+
+  stopTrackTimer() {
+    clearInterval(this.state.trackTimerId);
+  }
 
   /**
    * Stops the current track if one is playing,
@@ -61,6 +84,7 @@ class MusicPlayer extends React.Component {
     const [AppContainer] = this.props.containers;
     if (!AppContainer.isTrackLoading()) {
       AppContainer.getAudioSource().stop();
+      this.stopTrackTimer();
       await AppContainer.clearTrackInformation();
       this.setState({
         playing: false,
@@ -74,6 +98,7 @@ class MusicPlayer extends React.Component {
   pauseTrack = async () => {
     const [AppContainer] = this.props.containers;
     AppContainer.getAudioSource().stop();
+    this.stopTrackTimer();
     await AppContainer.clearTrackInformation();
     this.setState({
       pausedAt: Date.now() - this.state.startedAt,
@@ -98,6 +123,15 @@ class MusicPlayer extends React.Component {
     await AppContainer.selectTrack(
       AppContainer.getPreviousTrack().metadata.title
     );
+  };
+
+  handleProgressChange = e => {
+    const elementWidth = e.target.offsetWidth;
+    const clickPos = e.clientX - e.target.offsetLeft;
+    const trackPercentage = (clickPos / elementWidth) * 100;
+    const currentTrackTime = (this.state.duration * trackPercentage) / 100;
+    this.stopTrack();
+    this.playTrack(currentTrackTime);
   };
 
   /* Render Functions/Helpers */
@@ -188,6 +222,7 @@ class MusicPlayer extends React.Component {
   render() {
     const [AppContainer] = this.props.containers;
     const selectedTrack = AppContainer.getSelectedTrack();
+    const m = moment.duration(this.state.currentTrackTime, "seconds");
     return (
       <section id="music-player">
         <div id="now-playing">
@@ -202,6 +237,24 @@ class MusicPlayer extends React.Component {
         </div>
         {selectedTrack && (
           <section id="track-controls">
+            <div id="track-progress">
+              <span
+                id="track-progress-bar-container"
+                onClick={this.handleProgressChange}>
+                <progress
+                  style={{ height: "5px" }}
+                  value={this.state.percentageTrackComplete}
+                  max="100">
+                  70%
+                </progress>
+              </span>
+
+              <span id="track-time">
+                {m.minutes() > 0 ? `${m.minutes()}:` : "00:"}
+                {m.seconds() > 9 ? m.seconds() : `0${m.seconds()}`}
+              </span>
+            </div>
+
             {this.renderSkipBackward()}
             {this.renderPlayPause()}
             {this.renderStop()}

@@ -52,5 +52,44 @@ section {
 }
 
 .track-name {
-  width: 250px;
+  width: 100px;
+}
+
+.track-name::before {
+  background: linear-gradient(transparent, white);
+  width: 10px;
+}
+
+.track-data {
+  margin: 0 0.5rem;
+}
+
+.font-size--small {
+  font-size: calc(1rem * 0.75);
+}
+#track-progress {
+  display: flex;
+  align-items: center;
+}
+#track-progress progress {
+  background-color: red;
+  width: 100%;
+  vertical-align: middle;
+}
+#track-progress progress::-webkit-progress-bar {
+  background-color: white;
+}
+#track-progress progress::-webkit-progress-value {
+  background-color: red;
+}
+#track-progress progress::-moz-progress-bar {
+  background-color: red;
+}
+
+#track-time {
+  margin: 0 1rem;
+}
+
+#track-progress-bar-container {
+  flex-grow: 1;
 }

@@ -9,7 +9,6 @@ const Track = props => {
   const [AppContainer] = props.containers;
   const [isHighlighted, setIsHighlighted] = useState(false);
   const m = moment.duration(props.track.metadata.duration, "seconds");
-  debugger;
   return (
     <div
       onMouseEnter={() => setIsHighlighted(true)}
@@ -19,9 +18,16 @@ const Track = props => {
           AppContainer.selectTrack(props.track.name);
       }}
       className="track">
-      <span className="track-name">{props.track.metadata.title}</span>
-      <span>{props.track.metadata.artist}</span>
-      <span>
+      <span className="track-name track-data">
+        {props.track.metadata.title}
+      </span>
+      <span className="track-data font-size--small">
+        {props.track.metadata.artist}
+      </span>
+      <span className="track-data font-size--small">
+        {props.track.metadata.album}
+      </span>
+      <span className="track-data font-size--small">
         {" "}
         {`${m.hours() ? m.hours() : ""} ${m.minutes()}:${m.seconds()}`}{" "}
       </span>
