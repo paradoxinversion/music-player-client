@@ -24,7 +24,7 @@ class App extends React.Component {
           <h1 className="margin--bottom--small">Muse</h1>
           <p>Your simple music player</p>
         </header>
-        <div>
+        <div id="music-player-container">
           <MusicPlayer track={AppContainer.getSelectedTrack()} />
           <section id="track-container">
             {AppContainer.getTracks().map(track => (

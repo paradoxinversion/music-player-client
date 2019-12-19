@@ -99,3 +99,19 @@ section {
 #track-control-buttons {
   margin-top: 8px;
 }
+
+@media only screen and (min-width: 600px) {
+  /* Tablets+ */
+  #music-player-container {
+    display: flex;
+  }
+
+  #music-player {
+    width: 50%;
+    order: 1;
+  }
+
+  #track-container {
+    width: 50%;
+  }
+}
