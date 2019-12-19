@@ -16,7 +16,7 @@ section {
 }
 #music-player {
   padding: 1rem;
-  height: 125px;
+  height: 150px;
   text-align: center;
 }
 #track-controls {
@@ -72,9 +72,11 @@ section {
   align-items: center;
 }
 #track-progress progress {
-  background-color: red;
   width: 100%;
   vertical-align: middle;
+  /* the bar doesn't render on chrome without a bg color set... */
+  background-color: white;
+  border: none;
 }
 #track-progress progress::-webkit-progress-bar {
   background-color: white;
@@ -92,4 +94,8 @@ section {
 
 #track-progress-bar-container {
   flex-grow: 1;
+}
+
+#track-control-buttons {
+  margin-top: 8px;
 }

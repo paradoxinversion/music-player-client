@@ -254,11 +254,12 @@ class MusicPlayer extends React.Component {
                 {m.seconds() > 9 ? m.seconds() : `0${m.seconds()}`}
               </span>
             </div>
-
-            {this.renderSkipBackward()}
-            {this.renderPlayPause()}
-            {this.renderStop()}
-            {this.renderSkipForward()}
+            <div id="track-control-buttons">
+              {this.renderSkipBackward()}
+              {this.renderPlayPause()}
+              {this.renderStop()}
+              {this.renderSkipForward()}
+            </div>
           </section>
         )}
       </section>
